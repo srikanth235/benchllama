@@ -9,8 +9,11 @@ readme = "README.md"
 benchllama = "benchllama.main:app"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.9"
 typer = {extras = ["all"], version = "^0.9.0"}
+ollama = "^0.1.6"
+pandas = "^2.2.0"
+datasets = "^2.17.0"
 
 [tool.poetry.dev-dependencies]
 
