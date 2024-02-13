@@ -31,7 +31,7 @@ def evaluate(
     """
     Evaluate the performance of the models
     """
-    input_df = Loader().get_data(model)
+    input_df = Loader().get_data(model, 3)
     result_df = ModelProvider().execute_prompts(input_df)
     evaluated_df = None
     pretty_print(result_df)

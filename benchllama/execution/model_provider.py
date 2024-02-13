@@ -7,7 +7,13 @@ from ollama import Client
 from functools import partial
 from .prompt_formatter import PromptFormatter
 from .constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE
-
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +37,25 @@ class ModelProvider(object):
                 result.get("eval_duration"), \
                 result.get("eval_count", 0) / result.get("eval_duration")
 
+        processed_rows = []
+        with Progress(
+            TextColumn(
+                f"• [progress.percentage]" + "{task.percentage:>3.0f}%"
+            ),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TextColumn("•"),
+            TimeElapsedColumn(),
+        ) as progress:
+            # Iterate over the DataFrame rows and process each row
+            for index, row in progress.track(data.iterrows(), description="Executing prompts...", total=len(data)):
+                result = infer(row)
+                processed_row = row.copy()
+                processed_row[PROMPT_EVAL_DURATION] = result[0]
+                processed_row[PROMPT_EVAL_RATE] = result[1]
+                processed_row[EVAL_DURATION] = result[2]
+                processed_row[EVAL_RATE] = result[3]
+                processed_rows.append(processed_row)
 
-        data[[PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE]] =  \
-            data.apply(infer, axis=1, result_type='expand')
+        data = pd.DataFrame(processed_rows)
         return data
