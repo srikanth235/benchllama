@@ -1,8 +1,7 @@
 
-import logging
 import pandas as pd
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 from ollama import Client
 from functools import partial
 from .prompt_formatter import PromptFormatter
@@ -15,14 +14,12 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-log = logging.getLogger(__name__)
-
 class ModelProvider(object):
     def __init__(self, host="http://localhost:11434"):
         self.client = Client(host)
         self.prompt_formatter = PromptFormatter()
 
-    def execute_prompts(self, data: pd.DataFrame) -> pd.DataFrame:
+    def execute_prompts(self, data: pd.DataFrame, k: List[int]) -> pd.DataFrame:
         def infer(row):
             prompt, stop = self.prompt_formatter.format(row).values()
             result = self.client.generate(
@@ -47,6 +44,7 @@ class ModelProvider(object):
             TextColumn("•"),
             TimeElapsedColumn(),
         ) as progress:
+            data = pd.concat([data.copy() for _ in range(max(k))], ignore_index=True)
             # Iterate over the DataFrame rows and process each row
             for index, row in progress.track(data.iterrows(), description="Executing prompts...", total=len(data)):
                 result = infer(row)

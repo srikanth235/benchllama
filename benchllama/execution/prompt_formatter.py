@@ -18,7 +18,7 @@ class PromptFormatter():
                 "prompt": f"<｜fim▁begin｜>{additional_context}\n{prefix}<｜fim▁hole｜>{suffix}<｜fim▁end｜>",
                 "stop": ["<｜fim▁begin｜>", "<｜fim▁hole｜>", "<｜fim▁end｜>", "<END>"],
             }
-        elif "stable" in model.lower():
+        elif "stable" in model.lower() or "starcoder" in model.lower():
             return {
                 "prompt": f"<fim_prefix>{additional_context}\n{prefix}<fim_suffix>{suffix}<fim_middle>",
                 "stop": ["<|endoftext|>"],
