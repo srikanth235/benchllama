@@ -1,3 +1,4 @@
+import uuid
 import pandas as pd
 from typing import List
 from joblib import Parallel, delayed
@@ -9,12 +10,15 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
+from pathlib import Path
 from .score_estimator import ScoreEstimator
 class Evaluator:
-    def __init__(self):
+    def __init__(self, output: Path):
         self.score_estimator = ScoreEstimator()
+        self.execution_dir = output / "benchllama"  / str(uuid.uuid4())
 
     def execute_code(self, input_df: pd.DataFrame):
+        self.execution_dir.mkdir(parents=True, exist_ok=True)
         outputs = []
         with Progress(
              TextColumn(
@@ -26,7 +30,7 @@ class Evaluator:
             TimeElapsedColumn(),
         ) as progress:
             task = progress.add_task("[cyan]Verifying code...", total=len(input_df))
-            for result in Parallel(n_jobs=-1)(delayed(execute)(row) for index, row in input_df.iterrows()):
+            for result in Parallel(n_jobs=-1)(delayed(execute)(row, self.execution_dir) for index, row in input_df.iterrows()):
                 outputs.append(result.value)
                 progress.update(task, advance=1)
 

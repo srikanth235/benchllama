@@ -11,25 +11,25 @@ import subprocess
 from enum import Enum
 import pandas as pd
 from rich import print
+from pathlib import Path
 
+from ..constants import Result
 
-class Result(Enum):
-    SUCCESS = 1
-    FAILURE = 0
-
-def execute(problem: pd.Series):
+def execute(problem: pd.Series, execution_dir: Path):
     result = Result.FAILURE
-    python_code = problem["import"] + "\n" + problem["prompt"]  + \
+    code = problem["import"] + "\n" + problem["prompt"]  + \
         problem["completion"] + "\n" + \
         problem["test"] + "\n"
 
-    # Write the Python code to a file
-    with open(f'execution_{problem.name}.py', 'w') as file:
-        file.write(python_code)
+    cur_file = execution_dir / f"execution_{problem.name}.py"
+
+    # Write the code to a file
+    with open(cur_file, 'w') as file:
+        file.write(code)
 
     # Execute the Python script
     try:
-        subprocess.run(['python3', f'execution_{problem.name}.py'],
+        subprocess.run(['python3', str(cur_file)],
             timeout = 5,
             check=True,
             stdout=subprocess.PIPE,
@@ -39,26 +39,3 @@ def execute(problem: pd.Series):
     except Exception as e:
         pass
     return result
-
-
-
-@contextlib.contextmanager
-def create_tempdir():
-    with tempfile.TemporaryDirectory() as dirname:
-        with chdir(dirname):
-            yield dirname
-
-
-@contextlib.contextmanager
-def chdir(root):
-    if root == ".":
-        yield
-        return
-    cwd = os.getcwd()
-    os.chdir(root)
-    try:
-        yield
-    except BaseException as exc:
-        raise exc
-    finally:
-        os.chdir(cwd)

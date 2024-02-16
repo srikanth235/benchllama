@@ -11,7 +11,7 @@ class Loader():
     dataset = None
     languages = None
 
-    def __init__(self, name="bigcode/humanevalpack", languages=["python"]):
+    def __init__(self, name, languages=["python"]):
         self.languages = languages
         with Progress(
             SpinnerColumn(),
@@ -19,16 +19,18 @@ class Loader():
             transient=True,
         ) as progress:
             progress.add_task(description="Loading dataset...", total=None)
-            self.dataset = concatenate_datasets([
-                load_dataset(name, language, trust_remote_code=True)["test"] for language in languages
-            ])
+            if name is None:
+                self.dataset = concatenate_datasets([
+                    load_dataset("bigcode/humanevalpack", language, trust_remote_code=True)["test"] for language in languages
+                ])
+            else:
+                self.dataset = load_dataset("json", data_files=name)
 
 
-
-    def get_data(self, models, samples=3):
+    def get_data(self, models, samples=-1):
         df = self.dataset.to_pandas()
-        if samples is not None:
-            df['language'] = df["task_id"].apply(lambda x: x.split("/")[0])
+        df['language'] = df["task_id"].apply(lambda x: x.split("/")[0].lower())
+        if samples != -1:
             df = df.groupby('language',  group_keys=False).apply(lambda group: group.sample(replace=False, n=min(samples, len(group))))
         dfs = []
         for model in models:
