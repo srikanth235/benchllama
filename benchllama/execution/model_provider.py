@@ -5,7 +5,7 @@ from typing import Dict, Any, List
 from ollama import Client
 from functools import partial
 from .prompt_formatter import PromptFormatter
-from ..constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE, COMPLETION
+from ..constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_COUNT, EVAL_COUNT, EVAL_DURATION, COMPLETION
 from rich.progress import (
     BarColumn,
     MofNCompleteColumn,
@@ -31,9 +31,9 @@ class ModelProvider(object):
                 }
             )
             return result.get("prompt_eval_duration"), \
-                result.get("prompt_eval_count", 0) / result.get("prompt_eval_duration"), \
+                result.get("prompt_eval_count", 0), \
                 result.get("eval_duration"), \
-                result.get("eval_count", 0) / result.get("eval_duration"), \
+                result.get("eval_count", 0), \
                 result.get("response")
 
         processed_rows = []
@@ -52,9 +52,9 @@ class ModelProvider(object):
                 result = infer(row)
                 processed_row = row.copy()
                 processed_row[PROMPT_EVAL_DURATION] = result[0]
-                processed_row[PROMPT_EVAL_RATE] = result[1]
+                processed_row[PROMPT_EVAL_COUNT] = result[1]
                 processed_row[EVAL_DURATION] = result[2]
-                processed_row[EVAL_RATE] = result[3]
+                processed_row[EVAL_COUNT] = result[3]
                 processed_row[COMPLETION] = result[4]
                 processed_rows.append(processed_row)
 

@@ -30,8 +30,8 @@ def evaluate(
         models: Annotated[Optional[List[str]], typer.Option(help="Names of models")] = list(["model_1", "model_2"]),
         languages: Annotated[Optional[List[Language]], typer.Option(help="Names of models", case_sensitive=False)] = list([Language.python]),
         num_completions: Annotated[Optional[int], typer.Option(help="Number of completions to be generated for each sample")] = 3,
-        k: Annotated[Optional[List[int]], typer.Option(help="The k for calculating pass@k")] = list([1, 5]),
-        samples: Annotated[Optional[int], typer.Option(help="Number of dataset samples to evaluate")] = 1,
+        k: Annotated[Optional[List[int]], typer.Option(help="The k for calculating pass@k")] = list([1, 2]),
+        samples: Annotated[Optional[int], typer.Option(help="Number of dataset samples to evaluate")] = 2,
         output: Annotated[Optional[Path], typer.Option(help="Output directory")] = "./tmp/outputs/",
     ):
     start_time = time.time()
