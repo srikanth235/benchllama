@@ -9,7 +9,7 @@ from rich import print
 from pathlib import Path
 from enum import Enum
 from .data_io import Loader
-from .execution import ModelProvider
+from .inference import ModelProvider
 from .utils import pretty_print
 from .evaluation import Evaluator
 
@@ -39,7 +39,7 @@ def evaluate(
     print(f"Dataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
-    result_df = ModelProvider().execute_prompts(input_df, num_completions)
+    result_df = ModelProvider().run_inference(input_df, num_completions)
     print(f"Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()

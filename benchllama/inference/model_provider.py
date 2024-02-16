@@ -20,7 +20,7 @@ class ModelProvider(object):
         self.client = Client(host)
         self.prompt_formatter = PromptFormatter()
 
-    def execute_prompts(self, data: pd.DataFrame, num_completions: int) -> pd.DataFrame:
+    def run_inference(self, data: pd.DataFrame, num_completions: int) -> pd.DataFrame:
         def infer(row):
             prompt, stop = self.prompt_formatter.format(row).values()
             result = self.client.generate(
