@@ -43,9 +43,11 @@ def evaluate(
     print(f"Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
-    evaluated_df = Evaluator().evaluate(result_df)
-    print(evaluated_df)
-    print(f"Evaluation completed :boom: in { time.time() - start_time :.4f} seconds.")
+    executed_df = Evaluator().execute_code(result_df)
+    print(f"Code execution completed :boom: in { time.time() - start_time :.4f} seconds.")
 
+    start_time = time.time()
+    result_df = Evaluator().estimate_score(executed_df, k)
+    print(f"Evaluation completed :boom: in { time.time() - start_time :.4f} seconds.")
 
     pretty_print(result_df)

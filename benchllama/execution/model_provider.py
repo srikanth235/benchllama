@@ -5,7 +5,7 @@ from typing import Dict, Any, List
 from ollama import Client
 from functools import partial
 from .prompt_formatter import PromptFormatter
-from .constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE, COMPLETION
+from ..constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE, COMPLETION
 from rich.progress import (
     BarColumn,
     MofNCompleteColumn,
@@ -13,6 +13,7 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
+
 
 class ModelProvider(object):
     def __init__(self, host="http://localhost:11434"):
