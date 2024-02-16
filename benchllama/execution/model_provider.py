@@ -5,7 +5,7 @@ from typing import Dict, Any, List
 from ollama import Client
 from functools import partial
 from .prompt_formatter import PromptFormatter
-from .constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE
+from .constants import PROMPT_EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_DURATION, EVAL_RATE, COMPLETION
 from rich.progress import (
     BarColumn,
     MofNCompleteColumn,
@@ -19,7 +19,7 @@ class ModelProvider(object):
         self.client = Client(host)
         self.prompt_formatter = PromptFormatter()
 
-    def execute_prompts(self, data: pd.DataFrame, k: List[int]) -> pd.DataFrame:
+    def execute_prompts(self, data: pd.DataFrame, num_completions: int) -> pd.DataFrame:
         def infer(row):
             prompt, stop = self.prompt_formatter.format(row).values()
             result = self.client.generate(
@@ -32,7 +32,8 @@ class ModelProvider(object):
             return result.get("prompt_eval_duration"), \
                 result.get("prompt_eval_count", 0) / result.get("prompt_eval_duration"), \
                 result.get("eval_duration"), \
-                result.get("eval_count", 0) / result.get("eval_duration")
+                result.get("eval_count", 0) / result.get("eval_duration"), \
+                result.get("response")
 
         processed_rows = []
         with Progress(
@@ -44,7 +45,7 @@ class ModelProvider(object):
             TextColumn("•"),
             TimeElapsedColumn(),
         ) as progress:
-            data = pd.concat([data.copy() for _ in range(max(k))], ignore_index=True)
+            data = pd.concat([data.copy() for _ in range(num_completions)], ignore_index=True)
             # Iterate over the DataFrame rows and process each row
             for index, row in progress.track(data.iterrows(), description="Executing prompts...", total=len(data)):
                 result = infer(row)
@@ -53,6 +54,7 @@ class ModelProvider(object):
                 processed_row[PROMPT_EVAL_RATE] = result[1]
                 processed_row[EVAL_DURATION] = result[2]
                 processed_row[EVAL_RATE] = result[3]
+                processed_row[COMPLETION] = result[4]
                 processed_rows.append(processed_row)
 
         data = pd.DataFrame(processed_rows)

@@ -11,6 +11,7 @@ from enum import Enum
 from .data_io import Loader
 from .execution import ModelProvider
 from .utils import pretty_print
+from .evaluation import Evaluator
 
 
 class Language(str, Enum):
@@ -25,23 +26,25 @@ app = typer.Typer()
 
 @app.command()
 def evaluate(
+        dataset: Annotated[Optional[Path], typer.Argument(help="Name of the dataset")] = "bigcode/humanevalpack",
         models: Annotated[Optional[List[str]], typer.Option(help="Names of models")] = list(["model_1", "model_2"]),
         languages: Annotated[Optional[List[Language]], typer.Option(help="Names of models", case_sensitive=False)] = list([Language.python]),
-        k: Annotated[Optional[List[int]], typer.Option(help="The k for calculating pass@k")] = list([1, 2]),
-        samples: Annotated[Optional[int], typer.Option(help="Number of samples to evaluate")] = 1,
-        dataset: Annotated[Optional[Path], typer.Argument(help="Name of the dataset")] = "bigcode/humanevalpack",
-        output: Annotated[Optional[Path], typer.Option(help="Output directory")] = "/tmp/outputs/",
+        num_completions: Annotated[Optional[int], typer.Option(help="Number of completions to be generated for each sample")] = 3,
+        k: Annotated[Optional[List[int]], typer.Option(help="The k for calculating pass@k")] = list([1, 5]),
+        samples: Annotated[Optional[int], typer.Option(help="Number of dataset samples to evaluate")] = 1,
+        output: Annotated[Optional[Path], typer.Option(help="Output directory")] = "./tmp/outputs/",
     ):
     start_time = time.time()
     input_df = Loader(languages=languages).get_data(models, samples)
     print(f"Dataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
-    result_df = ModelProvider().execute_prompts(input_df, k)
-    print(f"Prompt execution :boom: in { time.time() - start_time :.4f} seconds.")
+    result_df = ModelProvider().execute_prompts(input_df, num_completions)
+    print(f"Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
-    evaluated_df = None
+    evaluated_df = Evaluator().evaluate(result_df)
+    print(evaluated_df)
     print(f"Evaluation completed :boom: in { time.time() - start_time :.4f} seconds.")
 
 
