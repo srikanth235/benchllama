@@ -1,19 +1,17 @@
-import typer
-import pandas as pd
-import time
 import shutil
-
-from typing import List, Optional
-from typing_extensions import Annotated, Optional, List
-
-from rich import print
+import time
 from pathlib import Path
-from enum import Enum
+from typing import List, Optional
+
+import typer
+from rich import print
+from typing_extensions import Annotated
+
+from .constants import Language
 from .data_io import Loader
+from .evaluation import Evaluator
 from .inference import ModelProvider
 from .utils import pretty_print
-from .evaluation import Evaluator
-from .constants import Language
 
 app = typer.Typer()
 
@@ -45,13 +43,32 @@ def clean(
 
 @app.command()
 def evaluate(
-        dataset: Annotated[Optional[Path], typer.Option(help="Use this if you want to bring your own dataset", exists=True, dir_okay=False, readable=True, resolve_path=True)] = None,
-        models: Annotated[Optional[List[str]], typer.Option(help="Names of models")] = list(["model_1", "model_2"]),
-        languages: Annotated[Optional[List[Language]], typer.Option(help="List of languages to evaluate from bigcode/humanevalpack", case_sensitive=False)] = list([Language.python]),
-        num_completions: Annotated[Optional[int], typer.Option(help="Number of completions to be generated for each sample")] = 3,
+        models: Annotated[List[str], typer.Option(help="Names of models that need to be evaluated.")],
+        dataset: Annotated[Optional[Path], typer.Option(
+            help="By default, bigcode/humanevalpack from Hugging Face will be used.  If you want to use your own dataset, specify the path here.",
+            exists=True,
+            dir_okay=False,
+            readable=True,
+            resolve_path=True
+        )] = None,
+        languages: Annotated[Optional[List[Language]], typer.Option(
+            help="List of languages to evaluate from bigcode/humanevalpack. Ignore this if you are brining your own data",
+            case_sensitive=False
+        )] = list([Language.python]),
+        num_completions: Annotated[Optional[int], typer.Option(
+            help="Number of completions to be generated for each task."
+        )] = 3,
         k: Annotated[Optional[List[int]], typer.Option(help="The k for calculating pass@k")] = list([1, 2]),
-        samples: Annotated[Optional[int], typer.Option(help="Number of dataset samples to evaluate")] = 2,
-        output: Annotated[Optional[Path], typer.Option(exists=True, dir_okay=True, writable=True, resolve_path=True, help="Output directory")] = "/tmp",
+        samples: Annotated[Optional[int], typer.Option(
+            help="Number of dataset samples to evaluate. By default, all the samples get processed."
+        )] = -1,
+        output: Annotated[Optional[Path], typer.Option(
+            help="Output directory",
+            exists=True,
+            dir_okay=True,
+            writable=True,
+            resolve_path=True
+        )] = "/tmp",
     ):
     start_time = time.time()
     input_df = Loader(dataset, languages=languages).get_data(models, samples)

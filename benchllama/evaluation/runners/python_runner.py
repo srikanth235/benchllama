@@ -1,0 +1,34 @@
+import pandas as pd
+import subprocess
+
+from benchllama.constants import Result
+from pathlib import Path
+
+class PythonRunner:
+    def __init__(self, execution_dir: Path):
+        self.execution_dir = execution_dir
+
+    def run(self, problem: pd.Series):
+        result = Result.FAILURE
+        error = ""
+        code = problem["import"] + "\n" + problem["prompt"]  + \
+            problem["completion"] + "\n" + \
+            problem["test"] + "\n"
+
+        cur_file = self.execution_dir / f"execution_{problem.name}.py"
+        # Write the code to a file
+        with open(cur_file, 'w') as file:
+            file.write(code)
+
+        # Execute the Python script
+        try:
+            response = subprocess.run(['python3', str(cur_file)],
+                timeout = 5,
+                check=True,
+                capture_output=True
+            )
+            if response.returncode == 0:
+                result = Result.SUCCESS
+        except Exception as e:
+            error = str(e.stderr)
+        return result, error

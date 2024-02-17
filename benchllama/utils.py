@@ -1,5 +1,5 @@
 import pandas as pd
-from rich.table import Table, Column
+from rich.table import Table
 from rich.console import Console
 from .constants import PROMPT_EVAL_DURATION, EVAL_DURATION, PROMPT_EVAL_RATE, EVAL_RATE
 
@@ -10,6 +10,8 @@ def pretty_print(df: pd.DataFrame):
     for column in df.columns:
         if column == "model":
             table.add_column("Model", justify="right", style="yellow")
+        elif column == "language":
+            table.add_column("Language", style="purple")
         elif column == PROMPT_EVAL_DURATION:
             table.add_column("Prompt Eval (in secs)", justify="right", style="green")
         elif column == PROMPT_EVAL_RATE:
@@ -19,7 +21,7 @@ def pretty_print(df: pd.DataFrame):
         elif column == EVAL_RATE:
             table.add_column("Eval Rate (in tokens/sec)", justify="right", style="green")
         else:
-            table.add_column(column, justify="right", style="purple")
+            table.add_column(column, justify="right", style="cyan")
 
     # # Add rows from DataFrame
     for _, row in df.iterrows():

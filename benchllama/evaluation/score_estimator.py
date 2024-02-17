@@ -39,10 +39,10 @@ class ScoreEstimator:
             })
 
         def estimate_score(self, input_df: pd.DataFrame, k: List[int]):
-            result_df = input_df.groupby(["model", "task_id"], group_keys=True) \
+            result_df = input_df.groupby(["model", "task_id", "language"], group_keys=True) \
                         .apply(ScoreEstimator.model_task_aggregator, k=k) \
                         .reset_index() \
-                        .groupby("model") \
+                        .groupby(["model", "language"]) \
                         .apply(ScoreEstimator.model_aggregator, k=k) \
                         .reset_index()
 
