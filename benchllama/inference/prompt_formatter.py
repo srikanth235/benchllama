@@ -1,8 +1,8 @@
 import pandas as pd
 from typing import Dict, Any
 
-class PromptFormatter():
 
+class PromptFormatter:
     def __init__(self):
         pass
 

@@ -19,7 +19,16 @@ app = typer.Typer()
 @app.command()
 def clean(
     run_id: Annotated[Optional[str], typer.Option(help="Run id")] = None,
-    output: Annotated[Optional[Path], typer.Option(exists=True, dir_okay=True, writable=True, resolve_path=True, help="Output directory")] = "/tmp",
+    output: Annotated[
+        Optional[Path],
+        typer.Option(
+            exists=True,
+            dir_okay=True,
+            writable=True,
+            resolve_path=True,
+            help="Output directory",
+        ),
+    ] = "/tmp",
 ):
     if run_id:
         directory_path = output / "benchllama" / str(run_id)
@@ -41,35 +50,53 @@ def clean(
     except OSError as e:
         print(f"Error: {e}")
 
+
 @app.command()
 def evaluate(
-        models: Annotated[List[str], typer.Option(help="Names of models that need to be evaluated.")],
-        dataset: Annotated[Optional[Path], typer.Option(
+    models: Annotated[
+        List[str], typer.Option(help="Names of models that need to be evaluated.")
+    ],
+    dataset: Annotated[
+        Optional[Path],
+        typer.Option(
             help="By default, bigcode/humanevalpack from Hugging Face will be used.  If you want to use your own dataset, specify the path here.",
             exists=True,
             dir_okay=False,
             readable=True,
-            resolve_path=True
-        )] = None,
-        languages: Annotated[Optional[List[Language]], typer.Option(
+            resolve_path=True,
+        ),
+    ] = None,
+    languages: Annotated[
+        Optional[List[Language]],
+        typer.Option(
             help="List of languages to evaluate from bigcode/humanevalpack. Ignore this if you are brining your own data",
-            case_sensitive=False
-        )] = list([Language.python]),
-        num_completions: Annotated[Optional[int], typer.Option(
-            help="Number of completions to be generated for each task."
-        )] = 3,
-        k: Annotated[Optional[List[int]], typer.Option(help="The k for calculating pass@k")] = list([1, 2]),
-        samples: Annotated[Optional[int], typer.Option(
+            case_sensitive=False,
+        ),
+    ] = list([Language.python]),
+    num_completions: Annotated[
+        Optional[int],
+        typer.Option(help="Number of completions to be generated for each task."),
+    ] = 3,
+    k: Annotated[
+        Optional[List[int]], typer.Option(help="The k for calculating pass@k")
+    ] = list([1, 2]),
+    samples: Annotated[
+        Optional[int],
+        typer.Option(
             help="Number of dataset samples to evaluate. By default, all the samples get processed."
-        )] = -1,
-        output: Annotated[Optional[Path], typer.Option(
+        ),
+    ] = -1,
+    output: Annotated[
+        Optional[Path],
+        typer.Option(
             help="Output directory",
             exists=True,
             dir_okay=True,
             writable=True,
-            resolve_path=True
-        )] = "/tmp",
-    ):
+            resolve_path=True,
+        ),
+    ] = "/tmp",
+):
     start_time = time.time()
     input_df = Loader(dataset, languages=languages).get_data(models, samples)
     print(f"Dataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
@@ -79,9 +106,11 @@ def evaluate(
     print(f"Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
-    evaluator =  Evaluator(output)
+    evaluator = Evaluator(output)
     executed_df = evaluator.execute_code(result_df)
-    print(f"Code execution completed :boom: in { time.time() - start_time :.4f} seconds.")
+    print(
+        f"Code execution completed :boom: in { time.time() - start_time :.4f} seconds."
+    )
 
     start_time = time.time()
     result_df = evaluator.estimate_score(executed_df, k)

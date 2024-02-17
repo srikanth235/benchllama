@@ -5,6 +5,7 @@ from .constants import PROMPT_EVAL_DURATION, EVAL_DURATION, PROMPT_EVAL_RATE, EV
 
 console = Console()
 
+
 def pretty_print(df: pd.DataFrame):
     table = Table(title=":fire: Benchmark Results")
     for column in df.columns:
@@ -15,16 +16,25 @@ def pretty_print(df: pd.DataFrame):
         elif column == PROMPT_EVAL_DURATION:
             table.add_column("Prompt Eval (in secs)", justify="right", style="green")
         elif column == PROMPT_EVAL_RATE:
-            table.add_column("Prompt Eval Rate (in tokens/sec)", justify="right", style="green")
+            table.add_column(
+                "Prompt Eval Rate (in tokens/sec)", justify="right", style="green"
+            )
         elif column == EVAL_DURATION:
             table.add_column("Eval (in secs)", justify="right", style="green")
         elif column == EVAL_RATE:
-            table.add_column("Eval Rate (in tokens/sec)", justify="right", style="green")
+            table.add_column(
+                "Eval Rate (in tokens/sec)", justify="right", style="green"
+            )
         else:
             table.add_column(column, justify="right", style="cyan")
 
     # # Add rows from DataFrame
     for _, row in df.iterrows():
-        table.add_row(*[row[column] if isinstance(row[column], str) else f"{row[column]:.3f}" for column in df.columns])
+        table.add_row(
+            *[
+                row[column] if isinstance(row[column], str) else f"{row[column]:.3f}"
+                for column in df.columns
+            ]
+        )
 
     console.print(table)

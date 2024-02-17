@@ -13,10 +13,11 @@ from pathlib import Path
 from .score_estimator import ScoreEstimator
 from .code_runner import CodeRunner
 
+
 class Evaluator:
     def __init__(self, output: Path):
         self.score_estimator = ScoreEstimator()
-        self.execution_dir = output / "benchllama"  / str(uuid.uuid4())
+        self.execution_dir = output / "benchllama" / str(uuid.uuid4())
         self.code_runner = CodeRunner(self.execution_dir)
 
     def execute_code(self, input_df: pd.DataFrame):
@@ -24,16 +25,16 @@ class Evaluator:
         outputs = []
         errors = []
         with Progress(
-             TextColumn(
-                f"• [progress.percentage]" + "{task.percentage:>3.0f}%"
-            ),
+            TextColumn(f"• [progress.percentage]" + "{task.percentage:>3.0f}%"),
             BarColumn(),
             MofNCompleteColumn(),
             TextColumn("•"),
             TimeElapsedColumn(),
         ) as progress:
             task = progress.add_task("[cyan]Verifying code...", total=len(input_df))
-            for result, error in Parallel(n_jobs=-1)(delayed(self.code_runner.run)(row) for index, row in input_df.iterrows()):
+            for result, error in Parallel(n_jobs=-1)(
+                delayed(self.code_runner.run)(row) for index, row in input_df.iterrows()
+            ):
                 outputs.append(result.value)
                 errors.append(error)
                 progress.update(task, advance=1)
@@ -44,4 +45,3 @@ class Evaluator:
 
     def estimate_score(self, input_df: pd.DataFrame, k: List[int]):
         return self.score_estimator.estimate_score(input_df, k)
-
