@@ -42,12 +42,12 @@ class CppRunner:
                 capture_output=True,
                 shell=True,
             )
-            if response.stderr.decode():
-                error = response.stderr.decode()
-            elif response.stdout.decode():
-                error = response.stdout.decode()
-            else:
+            if response.returncode == 0:
                 result = Result.SUCCESS
+            if response.stderr:
+                error = response.stderr.decode()
+            else:
+                error = response.stdout.decode()
         except Exception as e:
             error = str(e)
         return result, error

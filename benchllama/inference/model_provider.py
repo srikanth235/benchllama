@@ -1,8 +1,6 @@
 import pandas as pd
 
-from typing import Dict, Any, List
 from ollama import Client
-from functools import partial
 from .prompt_formatter import PromptFormatter
 from ..constants import (
     PROMPT_EVAL_DURATION,
@@ -21,8 +19,8 @@ from rich.progress import (
 
 
 class ModelProvider(object):
-    def __init__(self, host="http://localhost:11434"):
-        self.client = Client(host)
+    def __init__(self, provider_url="http://localhost:11434"):
+        self.client = Client(provider_url)
         self.prompt_formatter = PromptFormatter()
 
     def run_inference(self, data: pd.DataFrame, num_completions: int) -> pd.DataFrame:

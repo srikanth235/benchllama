@@ -9,7 +9,7 @@ from .runners.cpp_runner import CppRunner
 # from .runners.rust_runner import RustRunner
 from .runners.java_runner import JavaRunner
 from .runners.javascript_runner import JavascriptRunner
-# from .runners.go_runner import GoRunner
+from .runners.go_runner import GoRunner
 
 
 class CodeRunner:
@@ -19,6 +19,7 @@ class CodeRunner:
         self.javascript_runner = JavascriptRunner(execution_dir)
         self.java_runner = JavaRunner(execution_dir)
         self.cpp_runner = CppRunner(execution_dir)
+        self.go_runner = GoRunner(execution_dir)
 
     def run(self, problem: pd.Series):
         if problem["language"].lower() == "python":
@@ -34,4 +35,4 @@ class CodeRunner:
         elif problem["language"].lower() == "go":
             return self.go_runner.run(problem)
         else:
-            return Result.FAILURE, ""
+            return Result.FAILURE, "Language not supported!"

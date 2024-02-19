@@ -56,6 +56,9 @@ def evaluate(
     models: Annotated[
         List[str], typer.Option(help="Names of models that need to be evaluated.")
     ],
+    provider_url: Annotated[
+        Optional[str], typer.Option(help="The endpoint of the model provider.")
+    ] = "http://localhost:11434",
     dataset: Annotated[
         Optional[Path],
         typer.Option(
@@ -78,7 +81,10 @@ def evaluate(
         typer.Option(help="Number of completions to be generated for each task."),
     ] = 3,
     k: Annotated[
-        Optional[List[int]], typer.Option(help="The k for calculating pass@k")
+        Optional[List[int]],
+        typer.Option(
+            help="The k for calculating pass@k. The values shouldn't exceed num_completions"
+        ),
     ] = list([1, 2]),
     samples: Annotated[
         Optional[int],
@@ -102,7 +108,7 @@ def evaluate(
     print(f"Dataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
-    result_df = ModelProvider().run_inference(input_df, num_completions)
+    result_df = ModelProvider(provider_url).run_inference(input_df, num_completions)
     print(f"Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
