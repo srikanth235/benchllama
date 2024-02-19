@@ -36,5 +36,4 @@ def pretty_print(df: pd.DataFrame):
                 for column in df.columns
             ]
         )
-
     console.print(table)

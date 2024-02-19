@@ -14,22 +14,29 @@ class JavascriptRunner:
         error = ""
         code = problem["prompt"] + problem["completion"] + "\n" + problem["test"] + "\n"
 
-        cur_file = self.execution_dir / f"execution_{problem.name}.js"
+        cur_file = (
+            self.execution_dir
+            / f"task_{problem.task_id.split('/')[-1]}"
+            / f"execution_{problem.name}.js"
+        )
+        cur_file.parent.mkdir(parents=True, exist_ok=True)
+
         # Write the code to a file
         with open(cur_file, "w") as file:
             file.write(code)
 
         try:
             response = subprocess.run(
-                ["node", str(cur_file)],
+                ["node " + str(cur_file)],
+                shell=True,
+                cwd=cur_file.parent,
                 timeout=5,
                 check=True,
                 capture_output=True,
-                shell=True,
             )
-            if response.stderr.decode():
+            if response.stderr:
                 error = response.stderr.decode()
-            elif response.stdout.decode():
+            elif response.stdout:
                 error = response.stdout.decode()
             else:
                 result = Result.SUCCESS

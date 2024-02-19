@@ -13,16 +13,19 @@ class PythonRunner:
         result = Result.FAILURE
         error = ""
         code = (
-            problem["import"]
-            + "\n"
-            + problem["prompt"]
+            problem["prompt"]
             + problem["completion"]
             + "\n"
             + problem["test"]
             + "\n"
         )
 
-        cur_file = self.execution_dir / f"execution_{problem.name}.py"
+        cur_file = (
+            self.execution_dir
+            / f"task_{problem.task_id.split('/')[-1]}"
+            / f"execution_{problem.name}.py"
+        )
+        cur_file.parent.mkdir(parents=True, exist_ok=True)
         # Write the code to a file
         with open(cur_file, "w") as file:
             file.write(code)
@@ -30,7 +33,7 @@ class PythonRunner:
         # Execute the Python script
         try:
             response = subprocess.run(
-                ["python3", str(cur_file)],
+                ["python3 " + str(cur_file)],
                 timeout=5,
                 check=True,
                 capture_output=True,

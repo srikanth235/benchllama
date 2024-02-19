@@ -45,3 +45,6 @@ class Evaluator:
 
     def estimate_score(self, input_df: pd.DataFrame, k: List[int]):
         return self.score_estimator.estimate_score(input_df, k)
+
+    def get_execution_directory(self):
+        return self.execution_dir

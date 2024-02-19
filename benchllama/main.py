@@ -123,3 +123,4 @@ def evaluate(
     print(f"Evaluation completed :boom: in { time.time() - start_time :.4f} seconds.")
 
     pretty_print(result_df)
+    print(f"\nYou can access the run data at: ", evaluator.get_execution_directory())

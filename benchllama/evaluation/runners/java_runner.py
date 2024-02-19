@@ -12,18 +12,18 @@ class JavaRunner:
     def run(self, problem: pd.Series):
         result = Result.FAILURE
         error = ""
-        code = (
-            problem["prompt"]
-            + problem["completion"]
-            + "\n"
-            + problem["test"]
-            + "\n"
+        code = problem["prompt"] + problem["completion"] + "\n" + problem["test"] + "\n"
+
+        dir_path = (
+            self.execution_dir
+            / f"task_{problem.task_id.split('/')[-1]}"
+            / f"execution_{problem.name}"
         )
 
-        dir_path = self.execution_dir / f"execution_{problem.name}"
         dir_path.mkdir(parents=True, exist_ok=True)
 
-        cur_file = self.execution_dir / f"execution_{problem.name}" / "Main.java"
+        cur_file = dir_path / "Main.java"
+
         # Write the code to a file
         with open(cur_file, "w") as file:
             file.write(code)
@@ -41,16 +41,16 @@ class JavaRunner:
                 raise Exception("Compilation failed")
 
             response = subprocess.run(
-                ["java Main"],  # removing .java extension.
+                ["java Main"],
                 cwd=dir_path,
                 timeout=5,
                 check=True,
                 capture_output=True,
-                shell=True
+                shell=True,
             )
             if response.returncode == 0:
                 result = Result.SUCCESS
-            if response.stderr:
+            elif response.stderr:
                 error = response.stderr.decode()
             elif response.stdout:
                 error = response.stdout.decode()

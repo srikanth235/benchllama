@@ -26,7 +26,7 @@ class Loader:
                     ]
                 )
             else:
-                self.dataset = load_dataset("json", data_files=name)
+                self.dataset = load_dataset("json", data_files={"test": str(name)})["test"]
 
     def get_data(self, models, samples=-1):
         df = self.dataset.to_pandas()

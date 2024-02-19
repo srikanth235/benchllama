@@ -13,8 +13,8 @@ class Language(str, Enum):
     js = "js",
     java = "java",
     go = "go",
-    cpp = "cpp",
-    rust = "rust"
+    cpp = "cpp"
+
 
 class Result(Enum):
     SUCCESS = 1

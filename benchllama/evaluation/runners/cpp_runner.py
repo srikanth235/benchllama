@@ -12,13 +12,17 @@ class CppRunner:
     def run(self, problem: pd.Series):
         result = Result.FAILURE
         error = ""
-        code = problem["prompt"] + problem["completion"] + "\n" + problem["test"] + "\n"
+        code = problem["prompt"] + problem["canonical_solution"] + "\n" + problem["test"] + "\n"
 
-        dir_path = self.execution_dir / f"execution_{problem.name}"
+        dir_path = (
+            self.execution_dir
+            / f"task_{problem.task_id.split('/')[-1]}"
+            / f"execution_{problem.name}"
+        )
         dir_path.mkdir(parents=True, exist_ok=True)
 
-        cur_file = self.execution_dir / f"execution_{problem.name}" / "test.cpp"
-        # Write the code to a file
+        cur_file = dir_path / "test.cpp"
+
         with open(cur_file, "w") as file:
             file.write(code)
 
@@ -28,14 +32,14 @@ class CppRunner:
                 timeout=5,
                 cwd=dir_path,
                 check=True,
-                shell=True,
                 capture_output=True,
+                shell=True,
             )
             if compilation_response.returncode != 0:
                 raise Exception("Compilation failed")
 
             response = subprocess.run(
-                ["./a.out"],  # removing .java extension.
+                ["./a.out"],
                 cwd=dir_path,
                 timeout=5,
                 check=True,
@@ -44,7 +48,7 @@ class CppRunner:
             )
             if response.returncode == 0:
                 result = Result.SUCCESS
-            if response.stderr:
+            elif response.stderr:
                 error = response.stderr.decode()
             else:
                 error = response.stdout.decode()

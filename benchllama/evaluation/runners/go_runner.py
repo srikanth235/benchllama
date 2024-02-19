@@ -30,14 +30,16 @@ class GoRunner:
         code = "package main" + "\n" + problem["prompt"] + problem["completion"]
         test_code = problem["test_setup"] + problem["test"]
 
-        dir_path = self.execution_dir / f"execution_{problem.name}"
+        dir_path = (
+            self.execution_dir
+            / f"task_{problem.task_id.split('/')[-1]}"
+            / f"execution_{problem.name}"
+        )
         dir_path.mkdir(parents=True, exist_ok=True)
         shutil.copytree(self.go_template_dir, dir_path, dirs_exist_ok=True)
 
-        cur_file = self.execution_dir / f"execution_{problem.name}" / "main.go"
-        cur_test_file = (
-            self.execution_dir / f"execution_{problem.name}" / "main_test.go"
-        )
+        cur_file = dir_path / "main.go"
+        cur_test_file = dir_path / "main_test.go"
 
         # Write the code to a file
         with open(cur_file, "w") as file:
@@ -57,9 +59,9 @@ class GoRunner:
             )
             if response.returncode == 0:
                 result = Result.SUCCESS
-            if response.stderr:
+            elif response.stderr:
                 error = response.stderr.decode()
-            else:
+            elif response.stdout:
                 error = response.stdout.decode()
         except Exception as e:
             error = str(e)
