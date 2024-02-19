@@ -1,6 +1,24 @@
-# 👀 See it in action
+<div align="center">
+  <h1><b>Benchllama</b></h1>
+  <p>
+    <strong>An open-source tool to benchmark you local LLMs.</strong>
+  </p>
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"/>
+  <img src="https://img.shields.io/pypi/v/benchllama" alt="PyPI"/>
+  <img src="https://img.shields.io/pypi/pyversions/benchllama.svg" alt="Supported Versions"/>
+  <img src="https://img.shields.io/pypi/dm/benchllama.svg" alt="GitHub: Downloads"/>
+  <a href="https://discord.gg/wykDxGyUHA"  style="text-decoration: none; outline: none">
+  <img src="https://dcbadge.vercel.app/api/server/vAcVQ7XhR2?style=flat&compact=true" alt="Discord"/>
+  </a>
+</div>
 
-# `benchllama`
+# 🚀 Installation
+
+```console
+$ pip install benchllama
+```
+
+# ⚙️ Usage
 
 **Usage**:
 
@@ -52,3 +70,7 @@ $ benchllama evaluate [OPTIONS]
 - `--samples INTEGER`: Number of dataset samples to evaluate. By default, all the samples get processed. [default: -1]
 - `--output PATH`: Output directory [default: /tmp]
 - `--help`: Show this message and exit.
+
+# Related Projects
+
+-

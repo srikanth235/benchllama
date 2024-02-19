@@ -1,9 +1,21 @@
 [tool.poetry]
 name = "benchllama"
-version = "0.2.0"
-description = ""
+version = "0.2.1"
+description = "Benchmark your local LLMs."
 authors = ["Srikanth Srungarapu <srikanth235@gmail.com>"]
+license = "MIT License"
+homepage = "https://github.com/srikanth235/benchllama/"
 readme = "README.md"
+keywords = [
+    "benchmark",
+    "llama",
+    "ollama",
+    "llms",
+    "openai",
+    "chatgpt",
+    "text-generation",
+]
+
 
 [tool.poetry.scripts]
 benchllama = "benchllama.main:app"
