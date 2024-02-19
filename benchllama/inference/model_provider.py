@@ -17,6 +17,7 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
+from rich import print
 
 class ModelProvider(object):
     def __init__(self, provider_url="http://localhost:11434"):
@@ -47,6 +48,9 @@ class ModelProvider(object):
         ) as progress:
             data = pd.concat(
                 [data.copy() for _ in range(num_completions)], ignore_index=True
+            )
+            print(
+                "\n:bulb: If inference is taking too long, use [green]--samples[/green] flag to adjust the number of samples.\n"
             )
             # Iterate over the DataFrame rows and process each row
             for index, row in progress.track(

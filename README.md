@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><b>Benchllama</b></h1>
+  <h1><b>🧮 Benchllama</b></h1>
   <p>
     <strong>An open-source tool to benchmark you local LLMs.</strong>
   </p>
@@ -70,7 +70,3 @@ $ benchllama evaluate [OPTIONS]
 - `--samples INTEGER`: Number of dataset samples to evaluate. By default, all the samples get processed. [default: -1]
 - `--output PATH`: Output directory [default: /tmp]
 - `--help`: Show this message and exit.
-
-# Related Projects
-
--

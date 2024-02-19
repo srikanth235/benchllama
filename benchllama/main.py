@@ -105,22 +105,22 @@ def evaluate(
 ):
     start_time = time.time()
     input_df = Loader(dataset, languages=languages).get_data(models, samples)
-    print(f"Dataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
+    print(f"\nDataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
 
     start_time = time.time()
     result_df = ModelProvider(provider_url).run_inference(input_df, num_completions)
-    print(f"Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.")
+    print(f"\nPrompts inferred :boom: in { time.time() - start_time :.4f} seconds.\n")
 
     start_time = time.time()
     evaluator = Evaluator(output)
     executed_df = evaluator.execute_code(result_df)
     print(
-        f"Code execution completed :boom: in { time.time() - start_time :.4f} seconds."
+        f"\nCode execution completed :boom: in { time.time() - start_time :.4f} seconds."
     )
 
     start_time = time.time()
     result_df = evaluator.estimate_score(executed_df, k)
-    print(f"Evaluation completed :boom: in { time.time() - start_time :.4f} seconds.")
+    print(f"\nEvaluation completed :boom: in { time.time() - start_time :.4f} seconds.\n")
 
     pretty_print(result_df)
     print(f"\nYou can access the run data at: ", evaluator.get_execution_directory())

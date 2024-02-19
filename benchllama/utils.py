@@ -10,17 +10,19 @@ def pretty_print(df: pd.DataFrame):
     table = Table(title=":fire: Benchmark Results")
     for column in df.columns:
         if column == "model":
-            table.add_column("Model", justify="right", style="yellow")
+            table.add_column("Model", justify="right", style="yellow", overflow="fold")
         elif column == "language":
             table.add_column("Language", style="purple")
         elif column == PROMPT_EVAL_DURATION:
-            table.add_column("Prompt Eval (in secs)", justify="right", style="green")
+            table.add_column(
+                "Prompt Eval Duration (in secs)", justify="right", style="green"
+            )
         elif column == PROMPT_EVAL_RATE:
             table.add_column(
                 "Prompt Eval Rate (in tokens/sec)", justify="right", style="green"
             )
         elif column == EVAL_DURATION:
-            table.add_column("Eval (in secs)", justify="right", style="green")
+            table.add_column("Eval Duration (in secs)", justify="right", style="green")
         elif column == EVAL_RATE:
             table.add_column(
                 "Eval Rate (in tokens/sec)", justify="right", style="green"
