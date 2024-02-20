@@ -10,6 +10,9 @@
   <a href="https://discord.gg/wykDxGyUHA"  style="text-decoration: none; outline: none">
   <img src="https://dcbadge.vercel.app/api/server/vAcVQ7XhR2?style=flat&compact=true" alt="Discord"/>
   </a>
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/srikanth235/benchllama/master/media/benchllama.gif" width="760"/>
+  </p>
 </div>
 
 # Introduction
