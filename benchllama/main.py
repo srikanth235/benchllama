@@ -43,7 +43,6 @@ def clean(
 
     try:
         shutil.rmtree(directory_path)
-        directory_path.rmdir()
         print("Directory removed successfully.")
     except FileNotFoundError:
         print("Directory does not exist!")
@@ -88,7 +87,7 @@ def evaluate(
         typer.Option(
             help="The k for calculating pass@k. The values shouldn't exceed num_completions"
         ),
-    ] = list([1, 2]),
+    ] = list([1, 3]),
     samples: Annotated[
         Optional[int],
         typer.Option(
@@ -124,7 +123,7 @@ def evaluate(
         f"\n:white_check_mark: Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.\n"
     )
 
-    ###### Phase 3 - Evaluation/ ########
+    ###### Phase 3 - Evaluation ########
     evaluator = Evaluator(result_df, output)
     evaluator.store_raw_data()
     start_time = time.time()
