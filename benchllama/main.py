@@ -80,6 +80,9 @@ def evaluate(
         Optional[int],
         typer.Option(help="Number of completions to be generated for each task."),
     ] = 3,
+    no_eval: Annotated[
+        bool, typer.Option("--no-eval/--eval", help="If true, evaluation will be done")
+    ] = True,
     k: Annotated[
         Optional[List[int]],
         typer.Option(
@@ -103,24 +106,44 @@ def evaluate(
         ),
     ] = "/tmp",
 ):
+    ###### Phase 1 - Loading Data ########
     start_time = time.time()
     input_df = Loader(dataset, languages=languages).get_data(models, samples)
-    print(f"\nDataset loaded :boom: in { time.time() - start_time :.4f} seconds.")
-
-    start_time = time.time()
-    result_df = ModelProvider(provider_url).run_inference(input_df, num_completions)
-    print(f"\nPrompts inferred :boom: in { time.time() - start_time :.4f} seconds.\n")
-
-    start_time = time.time()
-    evaluator = Evaluator(output)
-    executed_df = evaluator.execute_code(result_df)
     print(
-        f"\nCode execution completed :boom: in { time.time() - start_time :.4f} seconds."
+        f"\n:white_check_mark: Dataset loaded :boom: in { time.time() - start_time :.4f} seconds."
     )
 
+
+    ###### Phase 2 - Running Inference ########
     start_time = time.time()
-    result_df = evaluator.estimate_score(executed_df, k)
-    print(f"\nEvaluation completed :boom: in { time.time() - start_time :.4f} seconds.\n")
+    print(
+        "\n:bulb: If inference is taking too long, use [green]--samples[/green] flag to adjust the number of samples.\n"
+    )
+    result_df = ModelProvider(provider_url).run_inference(input_df, num_completions)
+    print(
+        f"\n:white_check_mark: Prompts inferred :boom: in { time.time() - start_time :.4f} seconds.\n"
+    )
+
+    ###### Phase 3 - Evaluation/ ########
+    evaluator = Evaluator(result_df, output)
+    evaluator.store_raw_data()
+    start_time = time.time()
+    if no_eval:
+        result_df = evaluator.estimate_score(True)
+        print(
+            "\n:bulb: For autocompletion based coding LLMs, use [green]--eval[/green] flag to enable pass@k calculations.\n"
+        )
+    else:
+        evaluator.execute_code()
+        result_df = evaluator.estimate_score(False, k)
+    print(
+        f"\n:white_check_mark: Evaluation completed :boom: in { time.time() - start_time :.4f} seconds.\n"
+    )
+
+
 
     pretty_print(result_df)
-    print(f"\nYou can access the run data at: ", evaluator.get_execution_directory())
+    print(
+        "\n:file_folder: You can access the run data at: ",
+        evaluator.get_execution_directory(),
+    )

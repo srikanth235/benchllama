@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from typing import List
+from typing import List, Optional
 from ..constants import (
     PROMPT_EVAL_DURATION,
     PROMPT_EVAL_COUNT,
@@ -24,10 +24,10 @@ class ScoreEstimator:
         return 1.0 - np.prod(1.0 - k / np.arange(n - c + 1, n + 1))
 
     @staticmethod
-    def model_task_aggregator(df_group, k):
-        n = df_group["result"].count()
-        c = df_group["result"].sum()
-        passes = {f"pass@{cur_k}": ScoreEstimator.pass_at_k(n, c, cur_k) for cur_k in k}
+    def model_task_aggregator(df_group, no_eval, k):
+        n = df_group["result"].count() if no_eval is False else 0
+        c = df_group["result"].sum() if no_eval is False else 0
+        passes = {f"pass@{cur_k}": ScoreEstimator.pass_at_k(n, c, cur_k) for cur_k in k} if no_eval is False else {}
         return pd.Series(
             {
                 PROMPT_EVAL_DURATION: df_group[PROMPT_EVAL_DURATION].mean(),
@@ -39,7 +39,8 @@ class ScoreEstimator:
         )
 
     @staticmethod
-    def model_aggregator(df_group, k):
+    def model_aggregator(df_group, no_eval, k):
+        passes = {f"pass@{cur_k}": df_group[f"pass@{cur_k}"].mean() for cur_k in k} if no_eval is False else {}
         return pd.Series(
             {
                 PROMPT_EVAL_DURATION: df_group[PROMPT_EVAL_DURATION].mean() / 10**9,
@@ -50,18 +51,17 @@ class ScoreEstimator:
                 EVAL_RATE: 10**9
                 * df_group[EVAL_COUNT].mean()
                 / df_group[EVAL_DURATION].mean(),
-                **{f"pass@{cur_k}": df_group[f"pass@{cur_k}"].mean() for cur_k in k},
+                **passes,
             }
         )
 
-    def estimate_score(self, input_df: pd.DataFrame, k: List[int]):
+    def estimate_score(self, input_df: pd.DataFrame, no_eval=True, k: Optional[List[int]] = None):
         result_df = (
             input_df.groupby(["model", "task_id", "language"], group_keys=True)
-            .apply(ScoreEstimator.model_task_aggregator, k=k)
+            .apply(ScoreEstimator.model_task_aggregator, no_eval=no_eval, k=k)
             .reset_index()
             .groupby(["model", "language"])
-            .apply(ScoreEstimator.model_aggregator, k=k)
+            .apply(ScoreEstimator.model_aggregator, no_eval=no_eval, k=k)
             .reset_index()
         )
-
         return result_df

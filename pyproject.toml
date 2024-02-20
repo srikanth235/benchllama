@@ -16,7 +16,6 @@ keywords = [
     "text-generation",
 ]
 
-
 [tool.poetry.scripts]
 benchllama = "benchllama.main:app"
 
