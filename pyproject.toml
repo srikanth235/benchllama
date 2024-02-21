@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "benchllama"
-version = "0.2.3"
+version = "0.2.4"
 description = "Benchmark your local LLMs."
 authors = ["Srikanth Srungarapu <srikanth235@gmail.com>"]
 license = "MIT License"
