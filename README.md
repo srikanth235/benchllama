@@ -21,9 +21,9 @@ Benchllama helps with benchmarking your local LLMs. Currently, it <u>only suppor
 
 # 📜 Background
 
-With the explosion of open source LLMs and toolbox to further customize these models like [Modelfiles](https://github.com/ollama/ollama/blob/main/docs/modelfile.md), [Mergekit](https://github.com/arcee-ai/mergekit), [LoRA](https://github.com/microsoft/LoRA) etc, it can be daunting to end users to choose the right LLM. From our experience with running local LLMs, the two key metrics that matter are performance and quality of responses. We created a simple CLI tool that enables the users to pick right LLM by evaluating them across these two parameters. 
+With the explosion of open source LLMs and toolbox to further customize these models like [Modelfiles](https://github.com/ollama/ollama/blob/main/docs/modelfile.md), [Mergekit](https://github.com/arcee-ai/mergekit), [LoRA](https://github.com/microsoft/LoRA) etc, it can be daunting to end users to choose the right LLM. From our experience with running local LLMs, the two key metrics that matter are performance and quality of responses. We created a simple CLI tool that enables the users to pick right LLM by evaluating them across these two parameters.
 
-Given our experience in coding LLMs, we have added out-of-box support for calculating `pass@k` for autocompletion models. In case, if you are into coding LLMs too, please checkout **Privy** ([github repo](https://github.com/srikanth235/privy), [vscode link](https://marketplace.visualstudio.com/items?itemName=privy.privy-vscode), [openvsx link](https://open-vsx.org/extension/Privy/privy-vscode)).
+Given our experience in coding LLMs, we felt it would be useful to add out-of-box support for calculating `pass@k` for autocompletion models. In case, if you are into coding LLMs, please checkout our related project i.e **Privy** ([github repo](https://github.com/srikanth235/privy), [vscode link](https://marketplace.visualstudio.com/items?itemName=privy.privy-vscode), [openvsx link](https://open-vsx.org/extension/Privy/privy-vscode)).
 
 # ✨ Features
 
