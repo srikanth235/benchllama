@@ -78,7 +78,7 @@ def evaluate(
     num_completions: Annotated[
         Optional[int],
         typer.Option(help="Number of completions to be generated for each task."),
-    ] = 3,
+    ] = 1,
     no_eval: Annotated[
         bool, typer.Option("--no-eval/--eval", help="If true, evaluation will be done")
     ] = True,
@@ -87,7 +87,7 @@ def evaluate(
         typer.Option(
             help="The k for calculating pass@k. The values shouldn't exceed num_completions"
         ),
-    ] = list([1, 3]),
+    ] = list([1]),
     samples: Annotated[
         Optional[int],
         typer.Option(

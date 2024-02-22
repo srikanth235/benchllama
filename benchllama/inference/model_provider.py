@@ -19,6 +19,7 @@ from rich.progress import (
 
 from rich import print
 
+
 class ModelProvider(object):
     def __init__(self, provider_url="http://localhost:11434"):
         self.client = Client(provider_url)
@@ -48,6 +49,7 @@ class ModelProvider(object):
             data = pd.concat(
                 [data.copy() for _ in range(num_completions)], ignore_index=True
             )
+            data = data.sort_values(by='model')
             # Iterate over the DataFrame rows and process each row
             for index, row in progress.track(
                 data.iterrows(), description="Executing prompts...", total=len(data)

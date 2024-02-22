@@ -14,7 +14,6 @@ from .score_estimator import ScoreEstimator
 from .code_runner import CodeRunner
 
 
-
 class Evaluator:
     def __init__(self, input_df: pd.DataFrame, output: Path):
         self.score_estimator = ScoreEstimator()
