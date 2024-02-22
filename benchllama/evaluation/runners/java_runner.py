@@ -3,6 +3,7 @@ import subprocess
 
 from benchllama.constants import Result
 from pathlib import Path
+from .utils import get_prompt_and_completion
 
 
 class JavaRunner:
@@ -12,7 +13,8 @@ class JavaRunner:
     def run(self, problem: pd.Series):
         result = Result.FAILURE
         error = ""
-        code = problem["prompt"] + problem["completion"] + "\n" + problem["test"] + "\n"
+        prompt, completion = get_prompt_and_completion(problem)
+        code = prompt + completion + "\n" + problem["test"] + "\n"
 
         dir_path = (
             self.execution_dir

@@ -13,7 +13,7 @@ class PromptFormatter:
         suffix = data.get("suffix", "")
         model = data.get("model")
 
-        if "deepseek" in model.lower():
+        if all([value in model.lower() for value in ["deepseek", "base"]]):
             return {
                 "prompt": f"<｜fim▁begin｜>{additional_context}\n{prefix}<｜fim▁hole｜>{suffix}<｜fim▁end｜>",
                 "stop": ["<｜fim▁begin｜>", "<｜fim▁hole｜>", "<｜fim▁end｜>", "<END>"],
@@ -23,7 +23,13 @@ class PromptFormatter:
                 "prompt": f"<fim_prefix>{additional_context}\n{prefix}<fim_suffix>{suffix}<fim_middle>",
                 "stop": ["<|endoftext|>"],
             }
-        return {
-            "prompt": f"<PRE>{additional_context}\n{prefix} <SUF>{suffix} <MID>",
-            "stop": ["<PRE>", "<SUF>", "<MID>", "<END>", "EOT"],
-        }
+        elif all([value in model.lower() for value in ["codellama", "code"]]):
+            return {
+                "prompt": f"<PRE>{additional_context}\n{prefix} <SUF>{suffix} <MID>",
+                "stop": ["<PRE>", "<SUF>", "<MID>", "<END>", "EOT"],
+            }
+        else:
+            return {
+                "prompt": data.get("instruction"),
+                "stop": []
+            }

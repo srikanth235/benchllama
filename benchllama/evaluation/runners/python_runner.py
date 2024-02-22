@@ -3,6 +3,7 @@ import subprocess
 
 from benchllama.constants import Result
 from pathlib import Path
+from .utils import get_prompt_and_completion
 
 
 class PythonRunner:
@@ -12,9 +13,10 @@ class PythonRunner:
     def run(self, problem: pd.Series):
         result = Result.FAILURE
         error = ""
+        prompt, completion = get_prompt_and_completion(problem)
         code = (
-            problem["prompt"]
-            + problem["completion"]
+            prompt
+            + completion
             + "\n"
             + problem["test"]
             + "\n"

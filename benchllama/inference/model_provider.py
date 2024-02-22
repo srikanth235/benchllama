@@ -26,9 +26,8 @@ class ModelProvider(object):
 
     def run_inference(self, data: pd.DataFrame, num_completions: int) -> pd.DataFrame:
         def infer(row):
-            prompt, stop = self.prompt_formatter.format(row).values()
             result = self.client.generate(
-                model=row["model"], prompt=prompt, options={"stop": stop}
+                model=row["model"], prompt=row["prompt"], options={"stop": row["stop"]}
             )
             return (
                 result.get("prompt_eval_duration"),
@@ -53,6 +52,8 @@ class ModelProvider(object):
             for index, row in progress.track(
                 data.iterrows(), description="Executing prompts...", total=len(data)
             ):
+                row["prompt"], row["stop"] = self.prompt_formatter.format(row).values()
+
                 result = infer(row)
                 processed_row = row.copy()
                 processed_row[PROMPT_EVAL_DURATION] = result[0]

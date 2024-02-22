@@ -3,7 +3,7 @@ import subprocess
 
 from benchllama.constants import Result
 from pathlib import Path
-
+from .utils import get_prompt_and_completion
 
 class CppRunner:
     def __init__(self, execution_dir: Path):
@@ -12,7 +12,8 @@ class CppRunner:
     def run(self, problem: pd.Series):
         result = Result.FAILURE
         error = ""
-        code = problem["prompt"] + problem["canonical_solution"] + "\n" + problem["test"] + "\n"
+        prompt, completion = get_prompt_and_completion(problem)
+        code = prompt + completion + "\n" + problem["test"] + "\n"
 
         dir_path = (
             self.execution_dir

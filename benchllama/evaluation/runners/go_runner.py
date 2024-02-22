@@ -4,6 +4,7 @@ import shutil
 
 from benchllama.constants import Result
 from pathlib import Path
+from .utils import get_prompt_and_completion
 
 
 class GoRunner:
@@ -27,7 +28,8 @@ class GoRunner:
 
         result = Result.FAILURE
         error = ""
-        code = "package main" + "\n" + problem["prompt"] + problem["completion"]
+        prompt, completion = get_prompt_and_completion(problem)
+        code = "package main" + "\n" + prompt + completion
         test_code = problem["test_setup"] + problem["test"]
 
         dir_path = (

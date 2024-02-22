@@ -26,8 +26,6 @@ class CodeRunner:
             return self.python_runner.run(problem)
         elif problem["language"].lower() == "cpp":
             return self.cpp_runner.run(problem)
-        elif problem["language"].lower() == "rust":
-            return self.rust_runner.run(problem)
         elif problem["language"].lower() == "java":
             return self.java_runner.run(problem)
         elif problem["language"].lower() == "javascript":
