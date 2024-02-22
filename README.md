@@ -17,13 +17,13 @@
 
 # 🔑 Key points
 
-Benchllama helps with benchmarking your local LLMs. Currently, it <u>only supports benchmarking models served via Ollama</u>. By default, it pulls [`bigcode/humanevalpack`](https://huggingface.co/datasets/bigcode/humanevalpack) from HuggingFace. There is an out of box support for evaluating code autocompletion models (you need to use `--eval` flag for triggering this). Currently, it supports the following languages: Python, JavaScript, Java, Go, C++. You can also bring your own dataset (see this [example](https://github.com/srikanth235/benchllama/tree/master/examples) for helping you with creating one) by specifying the path to it in `--dataset` flag.
+Benchllama helps with benchmarking your local LLMs. Currently, it <u>only supports benchmarking models served via Ollama</u>. By default, it pulls [`bigcode/humanevalpack`](https://huggingface.co/datasets/bigcode/humanevalpack) from HuggingFace. There is out-of-box support for evaluating code coding models (you need to use `--eval` flag for triggering this). Currently, it supports the following languages: Python, JavaScript, Java, Go, C++. You can also bring your dataset (see this [example](https://github.com/srikanth235/benchllama/tree/master/examples) to help you with creating one) by specifying the path to it in the `--dataset` flag.
 
 # 📜 Background
 
-With the explosion of open source LLMs and toolbox to further customize these models like [Modelfiles](https://github.com/ollama/ollama/blob/main/docs/modelfile.md), [Mergekit](https://github.com/arcee-ai/mergekit), [LoRA](https://github.com/microsoft/LoRA) etc, it can be daunting to end users to choose the right LLM. From our experience with running local LLMs, the two key metrics that matter are performance and quality of responses. We created a simple CLI tool that enables the users to pick right LLM by evaluating them across these two parameters.
+With the explosion of open source LLMs and toolbox to further customize these models like [Modelfiles](https://github.com/ollama/ollama/blob/main/docs/modelfile.md), [Mergekit](https://github.com/arcee-ai/mergekit), [LoRA](https://github.com/microsoft/LoRA) etc, it can be daunting to end users to choose the right LLM. From our experience with running local LLMs, the two key metrics that matter are performance and quality of responses. We created a simple CLI tool that enables the users to pick the right LLM by evaluating them across these two parameters.
 
-Given our experience in coding LLMs, we felt it would be useful to add out-of-box support for calculating `pass@k` for autocompletion models. In case, if you are into coding LLMs, please checkout our related project i.e **Privy** ([github repo](https://github.com/srikanth235/privy), [vscode link](https://marketplace.visualstudio.com/items?itemName=privy.privy-vscode), [openvsx link](https://open-vsx.org/extension/Privy/privy-vscode)).
+Given our experience in coding LLMs, we felt it would be useful to add out-of-box support for calculating `pass@k` for coding models. In case, if you are into coding LLMs, please checkout our related project i.e **Privy** ([github repo](https://github.com/srikanth235/privy), [vscode link](https://marketplace.visualstudio.com/items?itemName=privy.privy-vscode), [openvsx link](https://open-vsx.org/extension/Privy/privy-vscode)).
 
 # ✨ Features
 
