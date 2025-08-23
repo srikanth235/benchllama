@@ -17,7 +17,7 @@
 
 # 🔑 Key points
 
-Benchllama helps with benchmarking your local LLMs. Currently, it <u>only supports benchmarking models served via Ollama</u>. By default, it pulls [`bigcode/humanevalpack`](https://huggingface.co/datasets/bigcode/humanevalpack) from HuggingFace. There is out-of-box support for evaluating code coding models (you need to use `--eval` flag for triggering this). Currently, it supports the following languages: Python, JavaScript, Java, Go, C++. You can also bring your dataset (see this [example](https://github.com/srikanth235/benchllama/tree/master/examples) to help you with creating one) by specifying the path to it in the `--dataset` flag.
+Benchllama helps with benchmarking your local LLMs. Currently, it <u>only supports benchmarking models served via Ollama</u>. By default, it pulls [`bigcode/humanevalpack`](https://huggingface.co/datasets/bigcode/humanevalpack) from HuggingFace. There is out-of-box support for evaluating code coding models (you need to use `--eval` flag for triggering this). Currently, it supports the following languages: Python, JavaScript, Java, Go, C++, Rust. You can also bring your dataset (see this [example](https://github.com/srikanth235/benchllama/tree/master/examples) to help you with creating one) by specifying the path to it in the `--dataset` flag.
 
 # 📜 Background
 
@@ -66,7 +66,7 @@ $ benchllama evaluate [OPTIONS]
 - `--models TEXT`: Names of models that need to be evaluated. [required]
 - `--provider-url TEXT`: The endpoint of the model provider. [default: http://localhost:11434]
 - `--dataset FILE`: By default, bigcode/humanevalpack from Hugging Face will be used. If you want to use your own dataset, specify the path here.
-- `--languages [python|js|java|go|cpp]`: List of languages to evaluate from bigcode/humanevalpack. Ignore this if you are brining your own data [default: Language.python]
+- `--languages [python|js|java|go|cpp|rust]`: List of languages to evaluate from bigcode/humanevalpack. Ignore this if you are brining your own data [default: Language.python]
 - `--num-completions INTEGER`: Number of completions to be generated for each task. [default: 3]
 - `--no-eval / --eval`: If true, evaluation will be done [default: no-eval]
 - `--k INTEGER`: The k for calculating pass@k. The values shouldn't exceed num_completions [default: 1, 2]

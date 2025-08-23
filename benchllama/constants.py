@@ -14,6 +14,7 @@ class Language(str, Enum):
     java = "java",
     go = "go",
     cpp = "cpp"
+    rust = "rust"
 
 
 class Result(Enum):
